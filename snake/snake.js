@@ -342,16 +342,71 @@ function changeDirection(event) {
         event.preventDefault();
     }
 
+    let dx = 0;
+    let dy = 0;
+
+    if (key === 'ArrowUp') { dx = 0; dy = -1; }
+    else if (key === 'ArrowDown') { dx = 0; dy = 1; }
+    else if (key === 'ArrowLeft') { dx = -1; dy = 0; }
+    else if (key === 'ArrowRight') { dx = 1; dy = 0; }
+    else { return; }
+
+    applyDirection(dx, dy);
+}
+
+function applyDirection(dx, dy) {
     const player = snakes.find(s => !s.isAI && s.alive);
     if (!player) return;
 
-    // Determine current direction to prevent 180 turn
-    // Use last applied direction (player.direction)
+    // Prevent 180 degree turn
+    // Check against player.direction (current moving direction)
+    if (dx !== 0 && player.direction.x !== 0 && dx !== player.direction.x) return; // Moving horizontal, trying to reverse
+    if (dy !== 0 && player.direction.y !== 0 && dy !== player.direction.y) return; // Moving vertical, trying to reverse
 
-    if (key === 'ArrowUp' && player.direction.y !== 1) { player.nextDirection = { x: 0, y: -1 }; }
-    else if (key === 'ArrowDown' && player.direction.y !== -1) { player.nextDirection = { x: 0, y: 1 }; }
-    else if (key === 'ArrowLeft' && player.direction.x !== 1) { player.nextDirection = { x: -1, y: 0 }; }
-    else if (key === 'ArrowRight' && player.direction.x !== -1) { player.nextDirection = { x: 1, y: 0 }; }
+    // More robust check: sum of vectors shouldn't be 0 (e.g. 1 + -1 = 0)
+    // But basic check: if moving Right (1,0), New (-1,0) -> 1 != -1 ok but player.direction.x is 1...
+    // The previous logic was: if (key === 'ArrowUp' && player.direction.y !== 1)
+    // Meaning: if going Up, and current Y is NOT Down (1).
+
+    if (dx === 0 && dy === -1 && player.direction.y === 1) return;
+    if (dx === 0 && dy === 1 && player.direction.y === -1) return;
+    if (dx === -1 && dy === 0 && player.direction.x === 1) return;
+    if (dx === 1 && dy === 0 && player.direction.x === -1) return;
+
+    player.nextDirection = { x: dx, y: dy };
+}
+
+// Touch Controls
+let touchStartX = 0;
+let touchStartY = 0;
+
+window.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+}, { passive: false });
+
+window.addEventListener('touchend', function (e) {
+    const touchEndX = e.changedTouches[0].screenX;
+    const touchEndY = e.changedTouches[0].screenY;
+    handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
+}, { passive: false });
+
+function handleSwipe(startX, startY, endX, endY) {
+    const diffX = endX - startX;
+    const diffY = endY - startY;
+    const threshold = 30; // Min distance for swipe
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        // Horizontal
+        if (Math.abs(diffX) > threshold) {
+            applyDirection(diffX > 0 ? 1 : -1, 0);
+        }
+    } else {
+        // Vertical
+        if (Math.abs(diffY) > threshold) {
+            applyDirection(0, diffY > 0 ? 1 : -1);
+        }
+    }
 }
 
 function gameOver() {

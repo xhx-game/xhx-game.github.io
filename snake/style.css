@@ -54,6 +54,8 @@ canvas {
   max-width: 65vh;
   /* 保持宽高比，虽然这里width/height属性已经定义了比例，但以防万一 */
   aspect-ratio: 1 / 1;
+  touch-action: none;
+  /* 禁止默认触摸行为（如滚动） */
 }
 
 .controls {
