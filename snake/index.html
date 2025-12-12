@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>贪吃蛇游戏</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>贪吃蛇</h1>
+        <canvas id="gameCanvas" width="500" height="500"></canvas>
+        <div class="controls">
+            <select id="difficultySelect">
+                <option value="2">一级难度 (速度 2)</option>
+                <option value="5" selected>二级难度 (速度 5)</option>
+                <option value="8">三级难度 (速度 8)</option>
+            </select>
+            <button id="startBtn">开始游戏 (空格)</button>
+            <button id="rulesBtn">游戏规则</button>
+            <span id="scoreBox">得分: 0</span>
+        </div>
+    </div>
+
+    <!-- Rules Modal -->
+    <div id="rulesModal" class="modal hidden">
+        <div class="rules">
+            <span id="closeRules" class="close-btn">&times;</span>
+            <h3>游戏规则</h3>
+            <p>🔴 <b>红色 (你)</b>：使用键盘方向键移动。</p>
+            <p>⚪ <b>白色 (AI)</b>：电脑控制，会抢你的食物。</p>
+            <p>🟡 <b>食物</b>：吃掉变长并得分。</p>
+            <p>⚠️ <b>死亡条件</b>：撞墙或撞到白蛇。</p>
+            <p>✨ <b>特殊能力</b>：你可以穿过自己的身体！</p>
+            <p>💀 <b>战利品</b>：白蛇死后会变成一堆食物，尽情享用吧！</p>
+        </div>
+    </div>
+    <script src="snake.js"></script>
+</body>
+
+</html>
