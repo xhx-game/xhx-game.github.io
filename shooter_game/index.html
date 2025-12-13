@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>射击游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-ui">
+        <div id="score">得分: 0</div>
+        <div id="start-screen">
+            <h1>星际射击</h1>
+            <div class="rules-box">
+                <p><strong>移动:</strong> 方向键 / AD</p>
+                <p><strong>射击:</strong> 空格 / 鼠标</p>
+                <p><strong>开始:</strong> Tab 键</p>
+                <p><strong>注意:</strong> 20分和40分后难度升级！</p>
+            </div>
+            <p style="margin-top: 20px; font-weight: bold;">按 Tab 键开始游戏</p>
+        </div>
+        <div id="game-over-screen" class="hidden">
+            <h1>游戏结束</h1>
+            <p>最终得分: <span id="final-score">0</span></p>
+            <button id="restart-btn">重新开始</button>
+        </div>
+    </div>
+    <canvas id="game-canvas"></canvas>
+    <script src="game.js"></script>
+</body>
+
+</html>

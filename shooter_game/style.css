@@ -1,0 +1,119 @@
+:root {
+    --primary-color: #00f3ff;
+    --bg-color: #0a0a12;
+    --text-color: #ffffff;
+    --accent-color: #ff0055;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-color);
+    overflow: hidden;
+    user-select: none;
+}
+
+#game-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#score {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    color: var(--primary-color);
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--primary-color);
+}
+
+#start-screen,
+#game-over-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--text-color);
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 40px;
+    border-radius: 15px;
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+}
+
+#start-screen h1,
+#game-over-screen h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#start-screen p,
+#game-over-screen p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+button {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 10px 30px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+button:hover {
+    background: var(--primary-color);
+    color: var(--bg-color);
+    box-shadow: 0 0 15px var(--primary-color);
+}
+
+.hidden {
+    display: none !important;
+}
+
+canvas {
+    display: block;
+}
+
+.rules-box {
+    text-align: left;
+    background: rgba(0, 243, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px solid rgba(0, 243, 255, 0.3);
+}
+
+.rules-box p {
+    font-size: 16px !important;
+    margin-bottom: 8px !important;
+    opacity: 0.9 !important;
+}
+
+.rules-box strong {
+    color: var(--primary-color);
+}
