@@ -1,0 +1,156 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #8B4513;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.turn {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#currentPlayer {
+    color: #000000;
+}
+
+.captured {
+    display: flex;
+    gap: 20px;
+}
+
+.board-container {
+    margin: 20px 0;
+    background-color: #DEB887;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#goBoard {
+    border: 2px solid #8B4513;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.game-controls {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #8B4513;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #A0522D;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.game-rules {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    max-width: 600px;
+}
+
+.game-rules h3 {
+    color: #8B4513;
+    margin-bottom: 10px;
+}
+
+.game-rules ul {
+    list-style-position: inside;
+    line-height: 1.6;
+}
+
+.game-rules li {
+    margin-bottom: 5px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .game-container {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    .board-container {
+        padding: 10px;
+    }
+    
+    #goBoard {
+        width: 100%;
+        height: auto;
+    }
+    
+    .game-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .game-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .captured {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+}

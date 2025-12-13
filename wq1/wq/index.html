@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>围棋游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>围棋游戏</h1>
+        
+        <div class="game-info">
+            <div class="turn">当前回合: <span id="currentPlayer">黑方</span></div>
+            <div class="captured">
+                <div>黑方提子: <span id="blackCaptured">0</span></div>
+                <div>白方提子: <span id="whiteCaptured">0</span></div>
+            </div>
+        </div>
+        
+        <div class="board-container">
+            <canvas id="goBoard" width="600" height="600"></canvas>
+        </div>
+        
+        <div class="game-controls">
+            <button id="newGameBtn">新游戏</button>
+            <button id="undoBtn">悔棋</button>
+            <button id="passBtn">跳过回合</button>
+        </div>
+        
+        <div class="game-rules">
+            <h3>游戏规则</h3>
+            <ul>
+                <li>黑方先行，双方轮流落子</li>
+                <li>落子必须在交叉点上</li>
+                <li>棋子没有气时会被提掉</li>
+                <li>不能在禁着点落子</li>
+                <li>游戏结束后，计算双方的领地和提子数决定胜负</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>

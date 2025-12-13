@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宝物大战</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>宝物大战</h1>
+        <button id="rulesBtn" class="rules-btn">显示游戏规则</button>
+        <div id="gameRules" class="game-rules hidden">
+            <h3>游戏规则</h3>
+            <ul>
+                <li>使用左右方向键控制角色移动</li>
+                <li>按空格键发射子弹消灭敌人</li>
+                <li>收集金色宝物获得10分</li>
+                <li>消灭一个敌人获得2分</li>
+                <li>躲避红色敌人，碰到会减少生命</li>
+                <li>敌人到达底部不会减少生命</li>
+                <li>分数达到100的倍数自动升级关卡</li>
+                <li>关卡越高，敌人速度越快</li>
+                <li>收集红色爱心可以增加生命值（最多5条生命）</li>
+                <li>生命耗尽游戏结束</li>
+            </ul>
+        </div>
+        <div class="game-info">
+            <div class="score">得分: <span id="score">0</span></div>
+            <div class="level">关卡: <span id="level">1</span></div>
+            <div class="lives">生命: <span id="lives">3</span></div>
+        </div>
+        <canvas id="gameCanvas" width="400" height="300"></canvas>
+        <div class="game-controls">
+            <p>使用左右方向键移动，空格键射击，按B键显示/隐藏游戏规则</p>
+        </div>
+        <div id="gameOver" class="game-over hidden">
+            <h2>游戏结束</h2>
+            <p>最终得分: <span id="finalScore">0</span></p>
+            <button onclick="restartGame()">重新开始</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
