@@ -23,4 +23,8 @@
 一个标准的基础射击游戏原型。
 - **试玩地址**: [https://xhx-game.github.io/shooter_game/](https://xhx-game.github.io/shooter_game/)
 
+### 5. Shopping Game (买菜游戏)
+一个模拟买菜的休闲游戏。玩家需要根据每日任务，在菜市场购买指定的蔬菜，合理管理金钱并完成任务！
+- **试玩地址**: [https://xhx-game.github.io/shopping_game/](https://xhx-game.github.io/shopping_game/)
+
 ---

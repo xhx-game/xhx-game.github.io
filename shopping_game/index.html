@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>买菜游戏</title>
+    <link rel="stylesheet" href="shopping_game.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <div class="header-content">
+                <button id="start-btn" class="control-btn start">开始游戏</button>
+                <h1>买菜游戏</h1>
+                <button id="pause-btn" class="control-btn pause">暂停游戏</button>
+            </div>
+            <div class="game-info">
+                <button id="clear-cart-btn" class="control-btn clear-cart">清空购物车</button>
+                <div class="money">金钱: <span id="money">100</span>元</div>
+            </div>
+        </header>
+
+        <div class="game-main">
+            <aside class="game-sidebar">
+                <div class="task-section">
+                    <h3>今日任务</h3>
+                    <div id="task-list">
+                        <p>点击"开始游戏"获取任务</p>
+                    </div>
+                </div>
+
+                <div class="cart-section">
+                    <h3>购物车</h3>
+                    <div id="cart-items">
+                        <p>购物车是空的</p>
+                    </div>
+                    <div class="cart-total">
+                        总计: <span id="cart-total">0</span>元
+                    </div>
+                    <button id="checkout-btn">结账</button>
+                </div>
+            </aside>
+
+            <main class="game-play-area">
+                <div class="market-section">
+                    <h3>菜市场</h3>
+                    <div id="vegetable-market" class="market">
+                        <!-- 菜品将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <footer class="game-footer">
+            <div class="game-controls">
+            </div>
+            <div id="game-message" class="game-message"></div>
+        </footer>
+    </div>
+
+    <script src="shopping_game.js"></script>
+</body>
+</html>
