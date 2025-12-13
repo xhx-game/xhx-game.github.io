@@ -65,12 +65,10 @@ function initGame() {
 function generateVegetables() {
     elements.vegetableMarket.innerHTML = '';
     
-    // 随机选择6-10种蔬菜显示在市场中
-    const marketSize = Math.floor(Math.random() * 5) + 6; // 6到10之间的随机数
+    // 打乱所有蔬菜的顺序
     const shuffledVegetables = [...vegetableData].sort(() => Math.random() - 0.5);
-    const marketVegetables = shuffledVegetables.slice(0, marketSize);
     
-    marketVegetables.forEach(vegetable => {
+    shuffledVegetables.forEach(vegetable => {
         const vegetableElement = document.createElement('div');
         vegetableElement.className = 'vegetable-item';
         vegetableElement.dataset.id = vegetable.id;
