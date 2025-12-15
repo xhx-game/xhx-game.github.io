@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>围棋游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>围棋游戏</h1>
+        <div class="game-info">
+            <div class="info-item">
+                <span>当前玩家：</span>
+                <span id="current-player" class="player-black">黑方</span>
+            </div>
+            <div class="info-item">
+                <span>黑方提子：</span>
+                <span id="black-captures">0</span>
+            </div>
+            <div class="info-item">
+                <span>白方提子：</span>
+                <span id="white-captures">0</span>
+            </div>
+        </div>
+        <div class="game-main">
+            <div class="ai-control left">
+                <h3>黑方AI</h3>
+                <div class="ai-strength">
+                    <label for="black-ai-strength">攻击力：</label>
+                    <input type="range" id="black-ai-strength" min="1" max="10" value="5">
+                    <span id="black-strength-value">5</span>
+                </div>
+                <div class="ai-toggle">
+                    <label>
+                        <input type="checkbox" id="black-ai-enable"> 使用AI
+                    </label>
+                </div>
+                <button id="new-game">新游戏</button>
+            </div>
+            <div class="board-container">
+                <canvas id="go-board" width="380" height="380"></canvas>
+            </div>
+            <div class="ai-control right">
+                <h3>白方AI</h3>
+                <div class="ai-strength">
+                    <label for="white-ai-strength">攻击力：</label>
+                    <input type="range" id="white-ai-strength" min="1" max="10" value="5">
+                    <span id="white-strength-value">5</span>
+                </div>
+                <div class="ai-toggle">
+                    <label>
+                        <input type="checkbox" id="white-ai-enable"> 使用AI
+                    </label>
+                </div>
+                <button id="undo">悔棋</button>
+            </div>
+        </div>
+        <div class="board-size-controls">
+            <button id="size-19">19路棋盘</button>
+            <button id="size-13">13路棋盘</button>
+            <button id="size-9">9路棋盘</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>

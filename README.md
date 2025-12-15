@@ -27,4 +27,8 @@
 一个模拟买菜的休闲游戏。玩家需要根据每日任务，在菜市场购买指定的蔬菜，合理管理金钱并完成任务！
 - **试玩地址**: [https://xhx-game.github.io/shopping_game/](https://xhx-game.github.io/shopping_game/)
 
+### 6. Treasure War (宝物大战)
+一款飞机射击类游戏，玩家控制飞机左右移动，射击敌人并收集宝物。包含生命值系统、关卡升级和多种奖励机制。
+- **试玩地址**: 本地运行 (打开 treasure_war/index.html)
+
 ---

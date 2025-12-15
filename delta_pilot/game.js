@@ -12,6 +12,7 @@ let animationId;
 let score = 0;
 let gameActive = false;
 let lastTime = 0;
+let spawnInterval;
 
 // Resize Canvas
 function resize() {
@@ -203,8 +204,21 @@ class Enemy {
         const dy = player.y - this.y;
         const angle = Math.atan2(dy, dx);
 
-        this.velocity.x = Math.cos(angle) * 2;
-        this.velocity.y = Math.sin(angle) * 2;
+        const speed = score >= 20 ? 6 : 2;
+        this.velocity.x = Math.cos(angle) * speed;
+        this.velocity.y = Math.sin(angle) * speed;
+
+        // Evasion Logic
+        if (score >= 20) {
+            projectiles.forEach(proj => {
+                const d = Math.hypot(proj.x - this.x, proj.y - this.y);
+                if (d < 150) {
+                    const angleToProj = Math.atan2(proj.y - this.y, proj.x - this.x);
+                    this.velocity.x -= Math.cos(angleToProj) * speed * 0.8;
+                    this.velocity.y -= Math.sin(angleToProj) * speed * 0.8;
+                }
+            });
+        }
 
         this.x += this.velocity.x;
         this.y += this.velocity.y;
@@ -229,23 +243,33 @@ function init() {
     scoreEl.innerText = 'SCORE: 0';
 }
 
-function spawnEnemies() {
-    setInterval(() => {
+function spawnEnemies(interval = 2500) {
+    if (spawnInterval) clearInterval(spawnInterval);
+    spawnInterval = setInterval(() => {
         if (!gameActive) return;
 
-        const radius = 30;
-        let x, y;
-
-        if (Math.random() < 0.5) {
-            x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
-            y = Math.random() * canvas.height;
-        } else {
-            x = Math.random() * canvas.width;
-            y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
+        let count = 1;
+        if (score >= 40) {
+            count = 3;
+        } else if (score >= 20) {
+            count = 2;
         }
 
-        enemies.push(new Enemy(x, y));
-    }, 1500);
+        for (let i = 0; i < count; i++) {
+            const radius = 30;
+            let x, y;
+
+            if (Math.random() < 0.5) {
+                x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
+                y = Math.random() * canvas.height;
+            } else {
+                x = Math.random() * canvas.width;
+                y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
+            }
+
+            enemies.push(new Enemy(x, y));
+        }
+    }, interval);
 }
 
 // Animation Loop
@@ -284,8 +308,12 @@ function animate() {
             const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
             if (dist - enemy.radius - projectile.radius < 1) {
                 // Collision!
-                score += 100;
+                score += 1;
                 scoreEl.innerText = `SCORE: ${score}`;
+
+                if (score === 20) {
+                    spawnEnemies(500);
+                }
 
                 // Remove both
                 setTimeout(() => {

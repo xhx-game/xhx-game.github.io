@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国跳棋</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>中国跳棋</h1>
+        <div class="game-info">
+            <div class="info-item">
+                <span>当前玩家：</span>
+                <span id="current-player" class="player-red">红方</span>
+            </div>
+            <div class="info-item">
+                <span>回合数：</span>
+                <span id="turn-count">1</span>
+            </div>
+        </div>
+        <div class="game-main">
+            <div class="board-container">
+                <canvas id="checkers-board" width="600" height="600"></canvas>
+            </div>
+            <div class="game-controls">
+                <button id="new-game">新游戏</button>
+                <button id="undo">悔棋</button>
+                <button id="reset">重置游戏</button>
+            </div>
+        </div>
+        <div class="game-rules">
+            <h3>游戏规则</h3>
+            <ul>
+                <li>点击自己的棋子选择，再次点击目标位置落子</li>
+                <li>棋子可以向相邻的空位移动</li>
+                <li>棋子可以跳过相邻的棋子（自己或对手的）到达对面的空位</li>
+                <li>先将所有棋子移动到对方的三角区域获胜</li>
+            </ul>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
