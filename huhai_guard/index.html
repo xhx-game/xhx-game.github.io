@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>护海小卫士 (Little Guard of the Sea)</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-ui">
+        <div id="score-board">清理垃圾: <span id="score">0</span></div>
+        <div id="health-board">海洋健康: <span id="hp">100</span>%</div>
+    </div>
+
+    <div id="start-screen" class="overlay active">
+        <h1>护海小卫士</h1>
+        <p>滑动控制潜水艇 • 点击发射泡泡 • 只需要按B键</p>
+        <button id="start-btn">开始巡逻</button>
+    </div>
+
+    <div id="game-over-screen" class="overlay">
+        <h1>海洋需要你!</h1>
+        <p>最终清理: <span id="final-score">0</span></p>
+        <button id="restart-btn">再次尝试</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+    <script src="script.js"></script>
+</body>
+
+</html>

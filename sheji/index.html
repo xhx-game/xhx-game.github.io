@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Space Shooter</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="game-ui">
+        <div id="score-board">SCORE: <span id="score">0</span></div>
+        <div id="level-board">LEVEL: <span id="level">1</span></div>
+        <div id="death-board">DEATHS: <span id="deaths">0</span></div>
+        <div id="health-board">HP: <span id="hp">100</span>%</div>
+    </div>
+
+    <div id="start-screen" class="overlay active">
+        <h1>NEON BLASTER</h1>
+        <p>Drag to Move • Click to Shoot</p>
+        <button id="start-btn">IGNITION</button>
+    </div>
+
+    <div id="game-over-screen" class="overlay">
+        <h1>SYSTEM FAILURE</h1>
+        <p>Final Score: <span id="final-score">0</span></p>
+        <button id="restart-btn">REBOOT SYSTEM</button>
+    </div>
+
+    <div id="victory-screen" class="overlay">
+        <h1>VICTORY!</h1>
+        <p>Creating the happiest moment!</p>
+        <p>Final Score: <span id="victory-score">0</span></p>
+        <button id="victory-restart-btn">PLAY AGAIN</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

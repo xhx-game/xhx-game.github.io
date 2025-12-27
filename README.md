@@ -43,4 +43,12 @@
 另一个版本的围棋游戏。
 - **试玩地址**: [https://game.psemu.xyz/wq1/wq/](https://game.psemu.xyz/wq1/wq/)
 
+### 10. Huhai Guard (护海小卫士)
+一款海洋环保游戏。控制潜水艇清理海洋垃圾，保护海洋环境！
+- **试玩地址**: [https://game.psemu.xyz/huhai_guard/](https://game.psemu.xyz/huhai_guard/)
+
+### 11. sheji (射击)
+一个射击小游戏。
+- **试玩地址**: [https://game.psemu.xyz/sheji/](https://game.psemu.xyz/sheji/)
+
 ---
