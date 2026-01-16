@@ -51,4 +51,10 @@
 一个射击小游戏。
 - **试玩地址**: [https://game.psemu.xyz/sheji/](https://game.psemu.xyz/sheji/)
 
+
+### 12. 2D大逃杀 (射击)
+一个射击小游戏。
+- **试玩地址**: [https://game.psemu.xyz/2D大逃杀游戏.html](https://game.psemu.xyz/2D大逃杀游戏.html)
+
+
 ---

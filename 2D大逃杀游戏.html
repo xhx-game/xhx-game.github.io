@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D大逃杀游戏 - 更多敌人</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c2461, #1e3799);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: #ff9f43;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #dfe4ea;
+            margin-bottom: 20px;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        #gameCanvas {
+            background-color: #1a1a2e;
+            display: block;
+        }
+        
+        #startScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .start-title {
+            font-size: 3.5rem;
+            color: #ff9f43;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 159, 67, 0.7);
+        }
+        
+        .game-instructions {
+            background-color: rgba(30, 55, 153, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin-bottom: 30px;
+            border-left: 4px solid #ff9f43;
+        }
+        
+        .game-instructions h2 {
+            color: #ff9f43;
+            margin-bottom: 10px;
+        }
+        
+        .game-instructions ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        
+        .game-instructions li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .game-instructions li:before {
+            content: "▶";
+            color: #ff9f43;
+            position: absolute;
+            left: 0;
+        }
+        
+        #startButton {
+            background: linear-gradient(to right, #ff9f43, #ffaf60);
+            color: #0c2461;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            letter-spacing: 1px;
+        }
+        
+        #startButton:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to right, #ffaf60, #ff9f43);
+        }
+        
+        #startButton:active {
+            transform: translateY(-2px);
+        }
+        
+        .game-ui {
+            display: flex;
+            justify-content: space-between;
+            width: 800px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .player-stats, .game-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .health-bar, .ammo-bar {
+            width: 120px;
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .health-fill, .ammo-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+        
+        .health-fill {
+            background: linear-gradient(to right, #2ed573, #7bed9f);
+        }
+        
+        .ammo-fill {
+            background: linear-gradient(to right, #ff9f43, #ffaf60);
+        }
+        
+        .controls {
+            width: 800px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .control-group h3 {
+            color: #ff9f43;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .key {
+            display: inline-block;
+            background-color: #333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 0 3px;
+            font-family: monospace;
+        }
+        
+        .game-message {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 1.5rem;
+            color: #ff9f43;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            z-index: 5;
+            padding: 10px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .difficulty-selector {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .difficulty-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid #ff9f43;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .difficulty-btn:hover {
+            background: rgba(255, 159, 67, 0.3);
+        }
+        
+        .difficulty-btn.active {
+            background: #ff9f43;
+            color: #0c2461;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>2D大逃杀游戏</h1>
+        <p class="subtitle">击败所有敌人，成为最后的幸存者！</p>
+    </div>
+    
+    <div class="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <div id="startScreen">
+            <h1 class="start-title">2D大逃杀</h1>
+            
+            <div class="game-instructions">
+                <h2>游戏说明</h2>
+                <ul>
+                    <li>使用<strong>WASD键或方向键</strong>移动角色</li>
+                    <li>使用<strong>鼠标瞄准</strong>，<strong>左键射击</strong></li>
+                    <li>按<strong>B键</strong>重新装弹</li>
+                    <li>拾取<strong>绿色装备包</strong>升级武器</li>
+                    <li>击败所有敌人获得胜利</li>
+                    <li>注意躲避敌人的攻击</li>
+                </ul>
+                
+                <div style="margin-top: 15px;">
+                    <h3>选择难度：</h3>
+                    <div class="difficulty-selector">
+                        <button id="easyBtn" class="difficulty-btn active">简单 (5个敌人)</button>
+                        <button id="mediumBtn" class="difficulty-btn">中等 (8个敌人)</button>
+                        <button id="hardBtn" class="difficulty-btn">困难 (12个敌人)</button>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="startButton">开始游戏</button>
+        </div>
+        
+        <div id="gameMessage" class="game-message hidden"></div>
+    </div>
+    
+    <div id="gameUI" class="game-ui hidden">
+        <div class="player-stats">
+            <div class="stat">
+                <div class="stat-label">生命值</div>
+                <div class="stat-value" id="healthValue">100</div>
+                <div class="health-bar">
+                    <div id="healthFill" class="health-fill" style="width: 100%"></div>
+                </div>
+            </div>
+            
+            <div class="stat">
+                <div class="stat-label">武器</div>
+                <div class="stat-value" id="weaponName">手枪</div>
+            </div>
+            
+            <div class="stat">
+                <div class="stat-label">弹药</div>
+                <div class="stat-value" id="ammoCount">12/12</div>
+                <div class="ammo-bar">
+                    <div id="ammoFill" class="ammo-fill" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-stats">
+            <div class="stat">
+                <div class="stat-label">击败敌人</div>
+                <div class="stat-value" id="killsCount">0</div>
+            </div>
+            
+            <div class="stat">
+                <div class="stat-label">剩余敌人</div>
+                <div class="stat-value" id="enemiesCount">5</div>
+            </div>
+            
+            <div class="stat">
+                <div class="stat-label">难度</div>
+                <div class="stat-value" id="difficultyLabel">简单</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <div class="control-group">
+            <h3>移动控制</h3>
+            <p><span class="key">W</span> <span class="key">A</span> <span class="key">S</span> <span class="key">D</span> 或 <span class="key">↑</span> <span class="key">←</span> <span class="key">↓</span> <span class="key">→</span></p>
+        </div>
+        
+        <div class="control-group">
+            <h3>战斗控制</h3>
+            <p>鼠标瞄准，<span class="key">左键</span>射击，<span class="key">B</span>装弹</p>
+        </div>
+        
+        <div class="control-group">
+            <h3>目标</h3>
+            <p>击败所有敌人，拾取装备包</p>
+        </div>
+    </div>
+
+    <script>
+        // 获取Canvas和上下文
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 获取UI元素
+        const startScreen = document.getElementById('startScreen');
+        const startButton = document.getElementById('startButton');
+        const gameUI = document.getElementById('gameUI');
+        const gameMessage = document.getElementById('gameMessage');
+        const healthValue = document.getElementById('healthValue');
+        const healthFill = document.getElementById('healthFill');
+        const weaponName = document.getElementById('weaponName');
+        const ammoCount = document.getElementById('ammoCount');
+        const ammoFill = document.getElementById('ammoFill');
+        const killsCount = document.getElementById('killsCount');
+        const enemiesCount = document.getElementById('enemiesCount');
+        const difficultyLabel = document.getElementById('difficultyLabel');
+        
+        // 难度选择按钮
+        const easyBtn = document.getElementById('easyBtn');
+        const mediumBtn = document.getElementById('mediumBtn');
+        const hardBtn = document.getElementById('hardBtn');
+        
+        // 游戏配置
+        const gameConfig = {
+            difficulty: 'easy', // easy, medium, hard
+            enemyCount: 5,
+            enemySpeedMultiplier: 0.8,
+            enemyHealthMultiplier: 1.0,
+            playerHealth: 100,
+            supplyCount: 3
+        };
+        
+        // 游戏状态
+        const gameState = {
+            running: false,
+            score: 0,
+            message: '',
+            messageTimer: 0
+        };
+        
+        // 玩家对象
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            radius: 20,
+            speed: 5,
+            health: 100,
+            maxHealth: 100,
+            weapon: 'pistol',
+            ammo: 12,
+            maxAmmo: 12,
+            reloadTime: 0,
+            color: '#4dccbd',
+            trail: []  // 玩家移动轨迹
+        };
+        
+        // 武器属性
+        const weapons = {
+            pistol: { 
+                name: '手枪', 
+                damage: 25, 
+                fireRate: 0.5, 
+                ammo: 12, 
+                color: '#8a8a8a',
+                bulletSpeed: 10
+            },
+            rifle: { 
+                name: '步枪', 
+                damage: 40, 
+                fireRate: 0.2, 
+                ammo: 30, 
+                color: '#ff9f43',
+                bulletSpeed: 12
+            },
+            shotgun: { 
+                name: '霰弹枪', 
+                damage: 15, 
+                fireRate: 1.0, 
+                ammo: 8, 
+                color: '#ff6b81',
+                bulletSpeed: 8,
+                spread: 5  // 散射角度
+            }
+        };
+        
+        // 按键状态
+        const keys = {};
+        const mouse = { x: 0, y: 0, clicked: false };
+        
+        // 游戏对象数组
+        let bullets = [];
+        let enemies = [];
+        let supplies = [];
+        let particles = [];
+        
+        // 难度选择
+        easyBtn.addEventListener('click', function() {
+            gameConfig.difficulty = 'easy';
+            gameConfig.enemyCount = 5;
+            gameConfig.enemySpeedMultiplier = 0.8;
+            gameConfig.enemyHealthMultiplier = 1.0;
+            gameConfig.playerHealth = 100;
+            gameConfig.supplyCount = 3;
+            
+            easyBtn.classList.add('active');
+            mediumBtn.classList.remove('active');
+            hardBtn.classList.remove('active');
+            
+            difficultyLabel.textContent = '简单';
+        });
+        
+        mediumBtn.addEventListener('click', function() {
+            gameConfig.difficulty = 'medium';
+            gameConfig.enemyCount = 8;
+            gameConfig.enemySpeedMultiplier = 1.0;
+            gameConfig.enemyHealthMultiplier = 1.2;
+            gameConfig.playerHealth = 100;
+            gameConfig.supplyCount = 4;
+            
+            easyBtn.classList.remove('active');
+            mediumBtn.classList.add('active');
+            hardBtn.classList.remove('active');
+            
+            difficultyLabel.textContent = '中等';
+        });
+        
+        hardBtn.addEventListener('click', function() {
+            gameConfig.difficulty = 'hard';
+            gameConfig.enemyCount = 12;
+            gameConfig.enemySpeedMultiplier = 1.2;
+            gameConfig.enemyHealthMultiplier = 1.5;
+            gameConfig.playerHealth = 100;
+            gameConfig.supplyCount = 5;
+            
+            easyBtn.classList.remove('active');
+            mediumBtn.classList.remove('active');
+            hardBtn.classList.add('active');
+            
+            difficultyLabel.textContent = '困难';
+        });
+        
+        // 开始游戏
+        startButton.addEventListener('click', function() {
+            startScreen.style.display = 'none';
+            gameUI.classList.remove('hidden');
+            initGame();
+            gameState.running = true;
+            gameLoop();
+            showMessage('游戏开始！击败所有敌人！', 3000);
+            
+            // 移除按钮焦点
+            this.blur();
+        });
+        
+        // 初始化游戏对象
+        function initGame() {
+            bullets = [];
+            enemies = [];
+            supplies = [];
+            particles = [];
+            
+            // 重置玩家状态
+            player.x = canvas.width / 2;
+            player.y = canvas.height / 2;
+            player.health = gameConfig.playerHealth;
+            player.maxHealth = gameConfig.playerHealth;
+            player.weapon = 'pistol';
+            player.ammo = 12;
+            player.maxAmmo = 12;
+            player.reloadTime = 0;
+            player.trail = [];
+            
+            // 重置游戏状态
+            gameState.score = 0;
+            gameState.running = true;
+            
+            // 根据难度创建敌人
+            for (let i = 0; i < gameConfig.enemyCount; i++) {
+                createEnemy();
+            }
+            
+            // 创建装备包
+            for (let i = 0; i < gameConfig.supplyCount; i++) {
+                createSupply();
+            }
+            
+            updateUI();
+        }
+        
+        // 创建敌人
+        function createEnemy() {
+            // 确保敌人不会生成在玩家附近
+            let x, y;
+            let attempts = 0;
+            do {
+                x = 50 + Math.random() * 700;
+                y = 50 + Math.random() * 500;
+                attempts++;
+                if (attempts > 100) break; // 防止无限循环
+            } while (Math.hypot(x - player.x, y - player.y) < 150);
+            
+            // 根据难度设置敌人属性
+            const baseSpeed = 0.7 + Math.random() * 0.3; // 基础速度 0.7-1.0
+            const baseHealth = 80;
+            
+            enemies.push({
+                x: x,
+                y: y,
+                radius: 18,
+                speed: baseSpeed * gameConfig.enemySpeedMultiplier, // 应用难度系数
+                health: baseHealth * gameConfig.enemyHealthMultiplier,
+                maxHealth: baseHealth * gameConfig.enemyHealthMultiplier,
+                color: '#ff4757',
+                attackCooldown: 0,
+                direction: Math.random() * Math.PI * 2,
+                lastDirectionChange: 0,
+                type: Math.random() < 0.3 ? 'fast' : 'normal' // 30%的敌人是快速型
+            });
+        }
+        
+        // 创建装备包
+        function createSupply() {
+            const types = ['weapon', 'health', 'ammo'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            let color, radius = 15;
+            
+            switch(type) {
+                case 'weapon':
+                    color = '#2ed573'; // 绿色 - 武器
+                    break;
+                case 'health':
+                    color = '#3498db'; // 蓝色 - 生命
+                    radius = 12;
+                    break;
+                case 'ammo':
+                    color = '#f1c40f'; // 黄色 - 弹药
+                    radius = 10;
+                    break;
+            }
+            
+            supplies.push({
+                x: 50 + Math.random() * 700,
+                y: 50 + Math.random() * 500,
+                radius: radius,
+                type: type,
+                color: color,
+                pulse: 0
+            });
+        }
+        
+        // 创建粒子效果
+        function createParticles(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    radius: Math.random() * 3 + 1,
+                    color: color,
+                    life: 30 + Math.random() * 30
+                });
+            }
+        }
+        
+        // 绘制圆形
+        function drawCircle(x, y, radius, color) {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
+        }
+        
+        // 绘制圆环
+        function drawRing(x, y, radius, color, lineWidth) {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.stroke();
+            ctx.closePath();
+        }
+        
+        // 绘制玩家
+        function drawPlayer() {
+            // 绘制玩家轨迹
+            player.trail.forEach((point, index) => {
+                const alpha = index / player.trail.length;
+                drawCircle(point.x, point.y, player.radius * 0.3, `rgba(77, 204, 189, ${alpha * 0.3})`);
+            });
+            
+            // 绘制玩家身体
+            drawCircle(player.x, player.y, player.radius, player.color);
+            
+            // 绘制玩家轮廓
+            drawRing(player.x, player.y, player.radius + 2, '#fff', 2);
+            
+            // 绘制玩家方向指示器
+            const angle = Math.atan2(mouse.y - player.y, mouse.x - player.x);
+            const gunX = player.x + Math.cos(angle) * (player.radius + 8);
+            const gunY = player.y + Math.sin(angle) * (player.radius + 8);
+            
+            ctx.beginPath();
+            ctx.moveTo(player.x, player.y);
+            ctx.lineTo(gunX, gunY);
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            // 绘制枪口
+            drawCircle(gunX, gunY, 4, weapons[player.weapon].color);
+            
+            // 绘制生命条
+            drawHealthBar(player.x, player.y - player.radius - 15, player.radius * 2, 6, player.health, player.maxHealth, '#2ed573');
+            
+            // 更新轨迹
+            player.trail.push({x: player.x, y: player.y});
+            if (player.trail.length > 10) {
+                player.trail.shift();
+            }
+        }
+        
+        // 绘制生命条
+        function drawHealthBar(x, y, width, height, health, maxHealth, color) {
+            const barWidth = (health / maxHealth) * width;
+            
+            // 背景
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillRect(x - width/2, y, width, height);
+            
+            // 生命值
+            const gradient = ctx.createLinearGradient(x - width/2, y, x - width/2 + barWidth, y);
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(1, '#7bed9f');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(x - width/2, y, barWidth, height);
+            
+            // 边框
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x - width/2, y, width, height);
+        }
+        
+        // 绘制敌人
+        function drawEnemies() {
+            enemies.forEach(enemy => {
+                // 根据敌人类型设置颜色
+                let enemyColor = enemy.color;
+                if (enemy.type === 'fast') {
+                    enemyColor = '#e84118'; // 快速敌人用更深的红色
+                }
+                
+                // 敌人身体
+                drawCircle(enemy.x, enemy.y, enemy.radius, enemyColor);
+                
+                // 敌人轮廓
+                drawRing(enemy.x, enemy.y, enemy.radius + 1, '#fff', 1);
+                
+                // 敌人眼睛
+                ctx.fillStyle = '#000';
+                const eyeOffset = enemy.radius * 0.5;
+                const eyeDirection = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+                const eyeX1 = enemy.x + Math.cos(eyeDirection) * eyeOffset;
+                const eyeY1 = enemy.y + Math.sin(eyeDirection) * eyeOffset;
+                const eyeX2 = enemy.x + Math.cos(eyeDirection) * eyeOffset * 0.7;
+                const eyeY2 = enemy.y + Math.sin(eyeDirection) * eyeOffset * 0.7;
+                
+                drawCircle(eyeX1, eyeY1, 4, '#fff');
+                drawCircle(eyeX2, eyeY2, 4, '#fff');
+                drawCircle(eyeX1, eyeY1, 2, '#000');
+                drawCircle(eyeX2, eyeY2, 2, '#000');
+                
+                // 快速敌人有特殊标记
+                if (enemy.type === 'fast') {
+                    drawRing(enemy.x, enemy.y, enemy.radius + 3, '#ff9f43', 2);
+                }
+                
+                // 敌人生命条
+                drawHealthBar(enemy.x, enemy.y - enemy.radius - 10, enemy.radius * 2, 4, enemy.health, enemy.maxHealth, enemyColor);
+            });
+        }
+        
+        // 绘制子弹
+        function drawBullets() {
+            bullets.forEach(bullet => {
+                drawCircle(bullet.x, bullet.y, bullet.radius, bullet.color);
+                
+                // 子弹轨迹
+                ctx.beginPath();
+                ctx.moveTo(bullet.x, bullet.y);
+                ctx.lineTo(bullet.x - bullet.dx, bullet.y - bullet.dy);
+                ctx.strokeStyle = bullet.color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+        }
+        
+        // 绘制装备包
+        function drawSupplies() {
+            supplies.forEach(supply => {
+                // 脉冲效果
+                supply.pulse += 0.05;
+                const pulseRadius = supply.radius + Math.sin(supply.pulse) * 3;
+                
+                drawCircle(supply.x, supply.y, pulseRadius, supply.color);
+                drawRing(supply.x, supply.y, pulseRadius + 2, '#fff', 1.5);
+                
+                // 根据类型绘制不同图案
+                ctx.fillStyle = '#fff';
+                switch(supply.type) {
+                    case 'weapon':
+                        // 加号
+                        ctx.fillRect(supply.x - 5, supply.y - 1, 10, 2);
+                        ctx.fillRect(supply.x - 1, supply.y - 5, 2, 10);
+                        break;
+                    case 'health':
+                        // 心形
+                        ctx.beginPath();
+                        ctx.moveTo(supply.x, supply.y - 3);
+                        ctx.bezierCurveTo(supply.x, supply.y - 5, supply.x - 4, supply.y - 5, supply.x - 4, supply.y - 2);
+                        ctx.bezierCurveTo(supply.x - 4, supply.y + 1, supply.x, supply.y + 4, supply.x, supply.y + 4);
+                        ctx.bezierCurveTo(supply.x, supply.y + 4, supply.x + 4, supply.y + 1, supply.x + 4, supply.y - 2);
+                        ctx.bezierCurveTo(supply.x + 4, supply.y - 5, supply.x, supply.y - 5, supply.x, supply.y - 3);
+                        ctx.fill();
+                        break;
+                    case 'ammo':
+                        // 子弹形状
+                        ctx.fillRect(supply.x - 4, supply.y - 2, 8, 4);
+                        ctx.fillRect(supply.x + 2, supply.y - 1, 2, 2);
+                        break;
+                }
+            });
+        }
+        
+        // 绘制粒子效果
+        function drawParticles() {
+            particles.forEach(particle => {
+                const alpha = particle.life / 60;
+                ctx.globalAlpha = alpha;
+                drawCircle(particle.x, particle.y, particle.radius, particle.color);
+                ctx.globalAlpha = 1.0;
+            });
+        }
+        
+        // 更新玩家位置
+        function updatePlayer() {
+            if (!gameState.running) return;
+            
+            // 装弹处理
+            if (player.reloadTime > 0) {
+                player.reloadTime--;
+                if (player.reloadTime === 0) {
+                    player.ammo = weapons[player.weapon].ammo;
+                    updateUI();
+                    showMessage('装弹完成！', 1000);
+                }
+            }
+            
+            // 移动处理
+            let moveX = 0;
+            let moveY = 0;
+            
+            if (keys['ArrowUp'] || keys['w'] || keys['W']) moveY -= 1;
+            if (keys['ArrowDown'] || keys['s'] || keys['S']) moveY += 1;
+            if (keys['ArrowLeft'] || keys['a'] || keys['A']) moveX -= 1;
+            if (keys['ArrowRight'] || keys['d'] || keys['D']) moveX += 1;
+            
+            // 对角线移动速度修正
+            if (moveX !== 0 && moveY !== 0) {
+                moveX *= 0.7071;
+                moveY *= 0.7071;
+            }
+            
+            // 更新位置，限制在画布内
+            if (moveX !== 0 || moveY !== 0) {
+                player.x = Math.max(player.radius, Math.min(canvas.width - player.radius, player.x + moveX * player.speed));
+                player.y = Math.max(player.radius, Math.min(canvas.height - player.radius, player.y + moveY * player.speed));
+            }
+            
+            // 处理射击
+            if (mouse.clicked && player.reloadTime === 0 && gameState.running) {
+                if (player.ammo > 0) {
+                    const angle = Math.atan2(mouse.y - player.y, mouse.x - player.x);
+                    const weapon = weapons[player.weapon];
+                    
+                    if (player.weapon === 'shotgun') {
+                        // 霰弹枪射击多颗子弹
+                        for (let i = 0; i < 5; i++) {
+                            const spreadAngle = angle + (Math.random() - 0.5) * (weapon.spread * Math.PI / 180);
+                            bullets.push({
+                                x: player.x + Math.cos(spreadAngle) * (player.radius + 10),
+                                y: player.y + Math.sin(spreadAngle) * (player.radius + 10),
+                                dx: Math.cos(spreadAngle) * weapon.bulletSpeed,
+                                dy: Math.sin(spreadAngle) * weapon.bulletSpeed,
+                                radius: 3,
+                                damage: weapon.damage,
+                                color: weapon.color
+                            });
+                        }
+                        player.ammo--;
+                    } else {
+                        // 普通武器射击单颗子弹
+                        bullets.push({
+                            x: player.x + Math.cos(angle) * (player.radius + 10),
+                            y: player.y + Math.sin(angle) * (player.radius + 10),
+                            dx: Math.cos(angle) * weapon.bulletSpeed,
+                            dy: Math.sin(angle) * weapon.bulletSpeed,
+                            radius: 4,
+                            damage: weapon.damage,
+                            color: weapon.color
+                        });
+                        player.ammo--;
+                    }
+                    
+                    updateUI();
+                    
+                    // 射击冷却
+                    mouse.clicked = false;
+                    
+                    // 创建射击粒子效果
+                    createParticles(
+                        player.x + Math.cos(angle) * (player.radius + 15),
+                        player.y + Math.sin(angle) * (player.radius + 15),
+                        weapon.color,
+                        player.weapon === 'shotgun' ? 10 : 5
+                    );
+                } else if (player.ammo === 0) {
+                    showMessage('弹药耗尽！按B装弹', 1500);
+                }
+            }
+        }
+        
+        // 更新子弹
+        function updateBullets() {
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                const bullet = bullets[i];
+                
+                // 移动子弹
+                bullet.x += bullet.dx;
+                bullet.y += bullet.dy;
+                
+                // 移除超出画布的子弹
+                if (bullet.x < 0 || bullet.x > canvas.width || bullet.y < 0 || bullet.y > canvas.height) {
+                    bullets.splice(i, 1);
+                    continue;
+                }
+                
+                // 检查子弹是否击中敌人
+                let hit = false;
+                for (let j = enemies.length - 1; j >= 0; j--) {
+                    const enemy = enemies[j];
+                    const dx = bullet.x - enemy.x;
+                    const dy = bullet.y - enemy.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < enemy.radius) {
+                        // 击中敌人
+                        enemy.health -= bullet.damage;
+                        
+                        // 创建击中粒子效果
+                        createParticles(bullet.x, bullet.y, bullet.color, 8);
+                        
+                        if (enemy.health <= 0) {
+                            // 敌人被击败
+                            enemies.splice(j, 1);
+                            gameState.score += 100;
+                            
+                            // 创建敌人死亡粒子效果
+                            createParticles(enemy.x, enemy.y, enemy.color, 15);
+                            
+                            // 随机掉落装备包
+                            if (Math.random() < 0.4) {
+                                createSupply();
+                            }
+                            
+                            showMessage('击败敌人！+100分', 1500);
+                        }
+                        
+                        bullets.splice(i, 1);
+                        hit = true;
+                        updateUI();
+                        break;
+                    }
+                }
+                
+                if (hit) continue;
+            }
+        }
+        
+        // 更新敌人
+        function updateEnemies() {
+            enemies.forEach(enemy => {
+                // 计算到玩家的距离
+                const dx = player.x - enemy.x;
+                const dy = player.y - enemy.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // 快速敌人有更大的侦测范围
+                const detectionRange = enemy.type === 'fast' ? 350 : 300;
+                
+                if (distance < detectionRange) { // 侦测范围
+                    // 向玩家移动
+                    enemy.x += (dx / distance) * enemy.speed;
+                    enemy.y += (dy / distance) * enemy.speed;
+                    
+                    // 攻击冷却
+                    if (enemy.attackCooldown > 0) {
+                        enemy.attackCooldown--;
+                    }
+                    
+                    // 如果足够近，攻击玩家
+                    if (distance < enemy.radius + player.radius && enemy.attackCooldown === 0) {
+                        const damage = enemy.type === 'fast' ? 15 : 10;
+                        player.health -= damage;
+                        enemy.attackCooldown = enemy.type === 'fast' ? 40 : 60; // 快速敌人攻击更快
+                        updateUI();
+                        showMessage(`你被${enemy.type === 'fast' ? '快速' : ''}敌人攻击了！-${damage}生命值`, 1000);
+                        
+                        // 创建攻击粒子效果
+                        createParticles(
+                            player.x + (Math.random() - 0.5) * 20,
+                            player.y + (Math.random() - 0.5) * 20,
+                            enemy.color,
+                            5
+                        );
+                    }
+                } else {
+                    // 随机游走
+                    enemy.lastDirectionChange++;
+                    if (enemy.lastDirectionChange > 60 || 
+                        enemy.x < enemy.radius || enemy.x > canvas.width - enemy.radius ||
+                        enemy.y < enemy.radius || enemy.y > canvas.height - enemy.radius) {
+                        enemy.direction = Math.random() * Math.PI * 2;
+                        enemy.lastDirectionChange = 0;
+                    }
+                    
+                    enemy.x += Math.cos(enemy.direction) * enemy.speed * 0.5;
+                    enemy.y += Math.sin(enemy.direction) * enemy.speed * 0.5;
+                    
+                    // 边界检查
+                    enemy.x = Math.max(enemy.radius, Math.min(canvas.width - enemy.radius, enemy.x));
+                    enemy.y = Math.max(enemy.radius, Math.min(canvas.height - enemy.radius, enemy.y));
+                }
+            });
+        }
+        
+        // 更新装备包
+        function updateSupplies() {
+            for (let i = supplies.length - 1; i >= 0; i--) {
+                const supply = supplies[i];
+                const dx = player.x - supply.x;
+                const dy = player.y - supply.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < player.radius + supply.radius) {
+                    // 拾取装备包
+                    switch(supply.type) {
+                        case 'weapon':
+                            if (player.weapon === 'pistol') {
+                                player.weapon = 'rifle';
+                                player.maxAmmo = weapons.rifle.ammo;
+                                player.ammo = weapons.rifle.ammo;
+                                showMessage('获得步枪！伤害更高，射速更快！', 3000);
+                            } else if (player.weapon === 'rifle' && Math.random() < 0.5) {
+                                player.weapon = 'shotgun';
+                                player.maxAmmo = weapons.shotgun.ammo;
+                                player.ammo = weapons.shotgun.ammo;
+                                showMessage('获得霰弹枪！近距离威力巨大！', 3000);
+                            } else {
+                                player.ammo = weapons[player.weapon].ammo;
+                                showMessage('弹药已补充！', 1500);
+                            }
+                            break;
+                        case 'health':
+                            player.health = Math.min(player.maxHealth, player.health + 30);
+                            showMessage('生命值恢复+30！', 1500);
+                            break;
+                        case 'ammo':
+                            player.ammo = weapons[player.weapon].ammo;
+                            showMessage('弹药已补满！', 1500);
+                            break;
+                    }
+                    
+                    // 创建拾取粒子效果
+                    createParticles(supply.x, supply.y, supply.color, 12);
+                    
+                    supplies.splice(i, 1);
+                    updateUI();
+                }
+            }
+        }
+        
+        // 更新粒子
+        function updateParticles() {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const particle = particles[i];
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.vy += 0.1; // 重力
+                particle.life--;
+                
+                if (particle.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+        
+        // 检查游戏状态
+        function checkGameState() {
+            // 检查玩家生命值
+            if (player.health <= 0) {
+                gameState.running = false;
+                showMessage('游戏结束！你被击败了。点击重新开始按钮重新开始。', 999999);
+                
+                // 显示重新开始按钮
+                setTimeout(() => {
+                    const restartBtn = document.createElement('button');
+                    restartBtn.id = 'restartButton';
+                    restartBtn.textContent = '重新开始';
+                    restartBtn.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: linear-gradient(to right, #ff9f43, #ffaf60);
+                        color: #0c2461;
+                        border: none;
+                        padding: 15px 40px;
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                        border-radius: 50px;
+                        cursor: pointer;
+                        z-index: 20;
+                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                    `;
+                    restartBtn.addEventListener('click', function() {
+                        document.body.removeChild(restartBtn);
+                        initGame();
+                        gameState.running = true;
+                        gameLoop();
+                        showMessage('游戏重新开始！', 2000);
+                    });
+                    document.body.appendChild(restartBtn);
+                }, 500);
+                
+                return;
+            }
+            
+            // 检查是否击败所有敌人
+            if (enemies.length === 0) {
+                gameState.running = false;
+                const bonus = gameConfig.enemyCount * 50;
+                gameState.score += bonus;
+                showMessage(`恭喜！你击败了所有${gameConfig.enemyCount}个敌人！获得${bonus}奖励分！点击重新开始按钮再玩一次。`, 999999);
+                
+                // 显示重新开始按钮
+                setTimeout(() => {
+                    const restartBtn = document.createElement('button');
+                    restartBtn.id = 'restartButton';
+                    restartBtn.textContent = '重新开始';
+                    restartBtn.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: linear-gradient(to right, #ff9f43, #ffaf60);
+                        color: #0c2461;
+                        border: none;
+                        padding: 15px 40px;
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                        border-radius: 50px;
+                        cursor: pointer;
+                        z-index: 20;
+                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                    `;
+                    restartBtn.addEventListener('click', function() {
+                        document.body.removeChild(restartBtn);
+                        initGame();
+                        gameState.running = true;
+                        gameLoop();
+                        showMessage('游戏重新开始！', 2000);
+                    });
+                    document.body.appendChild(restartBtn);
+                }, 500);
+            }
+            
+            // 更新消息计时器
+            if (gameState.messageTimer > 0) {
+                gameState.messageTimer--;
+                if (gameState.messageTimer === 0) {
+                    gameMessage.textContent = '';
+                    gameMessage.classList.add('hidden');
+                }
+            }
+        }
+        
+        // 更新UI
+        function updateUI() {
+            // 更新生命值
+            healthValue.textContent = Math.max(0, player.health);
+            healthFill.style.width = `${Math.max(0, (player.health / player.maxHealth) * 100)}%`;
+            
+            // 更新武器和弹药
+            weaponName.textContent = weapons[player.weapon].name;
+            ammoCount.textContent = `${player.ammo}/${weapons[player.weapon].ammo}`;
+            ammoFill.style.width = `${(player.ammo / weapons[player.weapon].ammo) * 100}%`;
+            
+            // 更新分数和敌人数量
+            killsCount.textContent = gameState.score / 100;
+            enemiesCount.textContent = enemies.length;
+        }
+        
+        // 显示消息
+        function showMessage(text, duration) {
+            gameMessage.textContent = text;
+            gameMessage.classList.remove('hidden');
+            gameState.message = text;
+            gameState.messageTimer = duration / 16.67; // 转换为帧数
+        }
+        
+        // 游戏主循环
+        function gameLoop() {
+            // 清空画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (gameState.running) {
+                // 更新游戏状态
+                updatePlayer();
+                updateBullets();
+                updateEnemies();
+                updateSupplies();
+                updateParticles();
+                checkGameState();
+            }
+            
+            // 绘制游戏对象
+            drawParticles();
+            drawSupplies();
+            drawBullets();
+            drawEnemies();
+            drawPlayer();
+            
+            // 继续循环
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // 事件监听
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+            
+            // B键装弹（已从R键改为B键）
+            if ((e.key === 'b' || e.key === 'B') && gameState.running) {
+                if (player.ammo < weapons[player.weapon].ammo && player.reloadTime === 0) {
+                    player.reloadTime = player.weapon === 'shotgun' ? 80 : 60; // 霰弹枪装弹更慢
+                    showMessage('装弹中...', 1000);
+                }
+            }
+            
+            // 空格键重新开始
+            if (e.key === ' ' && !gameState.running) {
+                const restartBtn = document.getElementById('restartButton');
+                if (restartBtn) {
+                    document.body.removeChild(restartBtn);
+                    initGame();
+                    gameState.running = true;
+                    gameLoop();
+                    showMessage('游戏重新开始！', 2000);
+                }
+            }
+            
+            // 数字键切换武器
+            if (e.key === '1' && gameState.running) {
+                player.weapon = 'pistol';
+                player.maxAmmo = weapons.pistol.ammo;
+                player.ammo = Math.min(player.ammo, weapons.pistol.ammo);
+                updateUI();
+                showMessage('切换到手枪', 1000);
+            }
+            if (e.key === '2' && gameState.running && player.weapon !== 'pistol') {
+                player.weapon = 'rifle';
+                player.maxAmmo = weapons.rifle.ammo;
+                player.ammo = Math.min(player.ammo, weapons.rifle.ammo);
+                updateUI();
+                showMessage('切换到步枪', 1000);
+            }
+            if (e.key === '3' && gameState.running && player.weapon === 'shotgun') {
+                player.weapon = 'shotgun';
+                player.maxAmmo = weapons.shotgun.ammo;
+                player.ammo = Math.min(player.ammo, weapons.shotgun.ammo);
+                updateUI();
+                showMessage('切换到霰弹枪', 1000);
+            }
+        });
+        
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+        
+        canvas.addEventListener('mousedown', (e) => {
+            if (e.button === 0 && gameState.running) { // 左键
+                mouse.clicked = true;
+            }
+        });
+        
+        canvas.addEventListener('mouseup', (e) => {
+            if (e.button === 0) {
+                mouse.clicked = false;
+            }
+        });
+        
+        // 触摸屏支持
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (!gameState.running) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            mouse.x = touch.clientX - rect.left;
+            mouse.y = touch.clientY - rect.top;
+            mouse.clicked = true;
+        });
+        
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!gameState.running) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            mouse.x = touch.clientX - rect.left;
+            mouse.y = touch.clientY - rect.top;
+        });
+        
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            mouse.clicked = false;
+        });
+        
+        // 防止上下文菜单
+        canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+        
+        // 初始化游戏（但不开始）
+        initGame();
+    </script>
+</body>
+</html>
